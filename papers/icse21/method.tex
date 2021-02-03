@@ -1,0 +1,109 @@
+\section{Methodologies}
+\label{sec:methodologies}
+
+\input{tables/table-prior-work}
+
+Table~\ref{table:prior-work} lists recent work on \comgen and
+\methnam\Fix{short description}.  Each row shows information for one
+paper; two references in a single row indicate that the conference
+paper was extended into a journal paper.  The first group of papers
+targets \comgen and the second group targets \methnam.  The last three
+columns show the methodology (or methodologies) that were used in the
+evaluation.
+\Fix{I'm confused: none of these methods are code summarization?, which
+is the task you said you will look into in the intro.}
+
+In this section, we first summarize two commonly used methodologies:
+\mixedproj and \crossproj.  Then, we introduce a novel methodology,
+inspired by our development needs and prior work on defect
+prediction~\cite{TanETAL15Online}, that uses \evoaware evaluation
+dataset.
+
+\subsection{\Mixedproj}
+
+\begin{figure}[t]
+  \centering
+  \input{figs/method-mixedproj}
+  \caption{\Mixedproj \methodology. \label{fig:method-mixedproj}}
+\end{figure}
+
+The \emph{\mixedproj} methodology, which is the most commonly used in
+prior work based on Table~\ref{table:prior-work}, extracts \examples
+at a single point in time from various projects, then randomly
+shuffles the \examples and splits them into training, validation, and
+testing sets.  More formally, we define the following sets:\Fix{What are x,  y, z?}
+%
+\begin{align*}
+  \aexamples = \bigcup_{\aproject \in \aprojects} \aextract(\atime, \aproject) \\
+  \atrain, \aval, \atest = \asplit(\ashuffle(\aexamples), x, y, z)
+\end{align*}
+%
+Figure~\ref{fig:method-mixedproj} illustrates the \mixedproj
+methodology\Fix{gray}.
+%
+This methodology is \emph{time-unaware}, i.e., it does not consider if
+\examples in the testing sets are committed into a project before or
+after \examples that are in the training or validation sets.
+\Fix{What do boxes mean in Figure 1?}
+
+\Fix{talk what sets/\examples might be for different tasks}
+
+\subsection{\Crossproj}
+
+\begin{figure}[t]
+  \centering
+  \input{figs/method-crossproj}
+  \caption{\Crossproj \methodology. \label{fig:method-crossproj}}
+\end{figure}
+
+The \emph{\crossproj} methodology extracts examples at a single point
+in time from various projects.  This methodology was also commonly
+used in prior work.  Unlike the \mixedproj \methodology, \crossproj
+splits the \emph{set of projects} into testing, validation, and
+training sets.  Thus, all \examples from any project in the
+training/validation/testing set will be used for
+training/validation/testing.\Fix{This sounds like mixed project. Shouldn't it be the set of projects in test/val is disjoint from those in train?}
+%
+Figure~\ref{fig:method-crossproj} illustrates this
+methodology\Fix{gray}.  More formally, we define the following sets:
+%
+\begin{align*}
+  \aprojecttrain, \aprojectval, \aprojecttest = \asplit(\ashuffle(P), x, y, z) \\
+  \atrain = \bigcup_{\aproject \in \aprojecttrain} \aextract(\atime, \aproject) \\
+  \aval = \bigcup_{\aproject \in \aprojectval} \aextract(\atime, \aproject) \\
+  \atest = \bigcup_{\aproject \in \aprojecttest} \aextract(\atime, \aproject)
+\end{align*}
+%
+The \crossproj methodology is explicitly testing the ability to
+transfer a model to new projects.
+%
+However, \crossproj is also time-unaware, i.e., it does not consider
+if \examples from a project that is in testing set come before or
+after \examples from projects in the training set.
+
+% I would be surprised if it made a difference since this would imply
+% causal contamination across projects which is possible but I assume
+% unlikely.
+
+\subsection{\Evoaware}
+
+\begin{figure}[t]
+  \centering
+  \input{figs/method-evoaware}
+  \caption{\Evoaware \methodology. \label{fig:method-evoaware}}
+\end{figure}
+
+We propose a novel \methodology, dubbed \emph{\evoaware}.  Unlike the
+\methodologies explained earlier in this section, the \evoaware
+\methodology is \emph{time-aware}, i.e., \examples in the training set
+were available in software repositories \emph{before} \examples in the
+validation set, which were in turn available \emph{before} examples in
+the testing set.  Figure~\ref{fig:method-evoaware} illustrates this
+\methodology.  This \methodology could be used in combination with
+\mixedproj or \crossproj.  More formally, we define the following
+steps: \JiyangComment{Do we want to introduce filter function here?}
+\begin{align*}
+  \atrain = \bigcup_{\aproject \in projects} \aextract(\atime^{-2}, \aproject) \\
+  \aval = \bigcup_{\aproject \in projects} \aextract(\atime^{-1}, \aproject) \setminus \atrain \\
+  \atest = \bigcup_{\aproject \in projects} \aextract(\atime, \aproject) \setminus \atrain \setminus \aval \\
+\end{align*}

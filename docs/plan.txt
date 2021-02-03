@@ -1,0 +1,45 @@
+
+ - Dataset cleaning:
+
+   - Go for a smaller dataset (100 projects)
+
+   - Remove html tags & {@inheritdoc} comments
+
+ - Rerun existing models (1 trial), see how long it takes to fully train each of
+   them. Plot the learning curve.
+
+ - Add cross-project + evolution-aware setting
+
+ - Add models to comment generation:
+
+   - Graph (Fernandes et al. ICLR'19)
+
+   - Code-NN
+
+   - DeepCom non hybrid version
+
+ - Add models to method naming:
+
+   - code2vec
+
+   - ConvAttention (Allamanis et al. ICML'16)
+
+   - Transformer (Vaswani et al. NeurIPS'17)
+
+ - Add one task, code completion, with the following models:
+
+   - ngram
+
+   - RNN
+
+   - one more recent one, e.g., Pythia (Svyatkovskiy et al. KDD'19)
+
+
+
+ - Final experiment workload, assuming 1,000 projects and all previous are added:
+
+   - comment generation: 4 settings * 6 models * 3 trials * ~48h = 3,456 SU
+
+   - method naming: 4 settings * 6 models * 3 trials * ~48h = 3,456 SU
+
+   - code completion: 4 settings * 3 models * 3 trials * ~24h = 864 SU

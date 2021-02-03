@@ -1,0 +1,118 @@
+%%% defs-code.tex
+%%% Utility Commands for Code Listings
+%%% Version 1.0.2
+
+%%% ==========
+%%% Highlight code line
+
+\makeatletter
+\newenvironment{btHighlight}[1][]
+{\begingroup\tikzset{bt@Highlight@par/.style={#1}}\begin{lrbox}{\@tempboxa}}
+{\end{lrbox}\bt@HL@box[bt@Highlight@par]{\@tempboxa}\endgroup}
+
+\newcommand\btHL[1][]{%
+  \begin{btHighlight}[#1]\bgroup\aftergroup\bt@HL@endenv%
+}
+\def\bt@HL@endenv{%
+  \end{btHighlight}%
+  \egroup
+}
+\newcommand{\bt@HL@box}[2][]{%
+  \tikz[#1]{%
+    \pgfpathrectangle{\pgfpoint{1pt}{0pt}}{\pgfpoint{\wd #2}{\ht #2}}%
+    \pgfusepath{use as bounding box}%
+    \node[anchor=base west, fill=orange!30,outer sep=0pt,inner xsep=1pt, inner ysep=0pt, rounded corners=1pt, minimum height=\ht\strutbox,#1]{\raisebox{1pt}{\strut}\strut\usebox{#2}};
+  }%
+}
+
+\newenvironment{btHighlightLine}[1][]
+{\begingroup\tikzset{bt@HighlightLine@par/.style={#1}}\begin{lrbox}{\@tempboxa}}
+{\end{lrbox}\bt@HLLine@box[bt@HighlightLine@par]{\@tempboxa}\endgroup}
+
+\newcommand\btHLLine[1][]{%
+  \begin{btHighlightLine}[#1]\bgroup\aftergroup\bt@HLLine@endenv%
+}
+\def\bt@HLLine@endenv{%
+  \end{btHighlightLine}%
+  \egroup
+}
+\newcommand{\bt@HLLine@box}[2][]{%
+  \tikz[#1]{%
+    \pgfpathrectangle{\pgfpoint{0pt}{-1pt}}{\pgfpoint{\wd #2}{\ht #2}}%
+    \pgfusepath{use as bounding box}%
+    \node[anchor=base west, fill=orange!30,outer sep=0pt,inner xsep=0pt, inner ysep=0pt, minimum height=\ht\strutbox+3pt, minimum width=\linewidth,#1] (line-bg) {};
+    \node[right = 0 of line-bg.west, outer sep=0pt, inner xsep=0pt, inner ysep=0pt]{\raisebox{0pt}{\strut}\strut\usebox{#2}};
+  }%
+}
+\makeatother
+
+% Disable tikz's error message complaining redefining dollor-sign.  WARNING: this may indeed cause problems but hopefully not
+\makeatletter
+\global\let\tikz@ensure@dollar@catcode=\relax
+\makeatother
+
+
+%%%==========
+%%% COPIED FROM vkuncak/doc/vmcai09/defs.tex
+\definecolor{gray}{RGB}{211,211,211}
+\newcommand{\jbasicstyle}{\small\sffamily} % Style of code
+\newcommand{\textcode}[1]{{#1}}
+\newcommand{\jnumberstyle}{\scriptsize}
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{gray}\rule[-3pt]{0.80\linewidth}{9pt}}}
+
+\lstdefinelanguage{pseudo}
+{
+  morekeywords={},
+  keywordstyle=\bfseries,
+  lineskip=-0.1em,
+  numbers=left, % none for no numbers
+  numberstyle=\jnumberstyle,
+  numbersep=4pt,
+  basicstyle=\jbasicstyle,
+  breaklines=true,
+  breakautoindent=true,
+  tabsize=2,
+  columns=fullflexible,
+  morecomment=*[l][\textsl]{//},
+  mathescape=true,
+  xleftmargin=10pt,
+%  mathescape=false,
+}
+
+\lstdefinelanguage{todo-comment}
+{
+  morekeywords={},
+  keywordstyle=\bfseries,
+  lineskip=-0.1em,
+  numbers=none,
+  basicstyle=\jbasicstyle,
+  breaklines=true,
+  breakautoindent=true,
+  tabsize=2,
+  columns=fullflexible,
+  morecomment=*[l][\textsl]{//},
+  mathescape=true,
+  xleftmargin=-10pt,
+%  mathescape=false,
+}
+
+\lstdefinelanguage{java-pretty}
+{
+  language=java,
+  numbers=left,
+  basicstyle=\scriptsize\ttfamily,
+  numberstyle=\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  xleftmargin=6pt,
+  numbersep=2pt,
+  showstringspaces=false,
+  moredelim=**[il][{\btHLLine[fill=blue!10]}]{<HLL/>},
+  moredelim=**[is][{\btHL[fill=blue!20]}]{<HL>}{<HL/>},
+}
+
+\lstset{escapeinside={(*@}{@*)}}
+
+\newcommand{\JavaIn}[1]{\lstinline[language=java-pretty]{#1}}
+
+%%%==========

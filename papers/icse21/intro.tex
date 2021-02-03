@@ -1,0 +1,160 @@
+\section{Introduction}
+\label{sec:intro}
+
+Over the last several years, there has been a growing interest in
+applying machine learning (ML) models to\XComment{ code summarization}
+%code-natural language elements transduction tasks, 
+tasks that reason over source code and the natural language elements therein,
+including
+\comgen~\cite{IyerETAL16Summarizing, HuETAL18Deep,
+  LeClairETAL20Improved, LeClairETAL19Neural, WanETAL18Improving,
+  LiangAndZhu18Automatic, HuETAL18Summarizing, HuETAL19Deep,
+  AhmadETAL20Transformer-based, CaiETAL20TAG,
+  FernandesETAL19Structured}, code
+generation~\cite{YinAndNeubig17Syntactic, LingETAL16Latent},
+\methnam~\cite{AllamanisETAL16Convolutional, AlonETAL19code2seq,
+  AlonETAL19Code2vec, FernandesETAL19Structured}, code
+completion~\cite{AllamanisETAL18Learning}, etc.  This growing body of
+work has been introducing sophisticated models based on advanced ML,
+such as deep neural
+networks~\cite{HuETAL18Deep,HuETAL19Deep,AlonETAL19code2seq}, graph
+neural networks~\cite{ScarselliETAL08Graph, LeClairETAL20Improved},
+and transformers~\cite{Vaswani17Attention,
+  AhmadETAL20Transformer-based}.  Substantial progress has been
+reported over years, usually measured in terms of automatic metrics,
+such as \bleu~\cite{PapineniETAL02BLEU}, \precision, \recall, \fone
+score, etc.
+
+%, and the comparison among models
+%(and also with baselines) is commonly done using automatic metrics,
+%such as \bleu, \Fix{more}.
+
+Despite a solid progress in applying ML to\XComment{ code
+  summarization} these tasks, the \emph{\emethodology}
+i.e., the way we obtain \test, \val, and \train sets, in this domain
+is based on standard ML practices, without taking into account 
+practicalities in software engineering and evolution.
+%seems arbitrary.
+% and imprecise.
+This could lead to inflated values for automatic metrics reported in
+papers, e.g., \bleu could be much higher than it would be in practice,
+and misunderstanding if a model might actually be useful in practice.
+
+The key missing piece in prior work is the description of targeted
+\emph{use cases} of their proposed models.  
+For example, in prior work, it was not clear if
+people want to use models in a \emph{batch-mode} (i.e., applying the
+model to a repository at many places at a specific time point $\tau$)
+or \emph{continuous-mode} (i.e., using the model as code is being
+developed).
+%
+One use case might be considered more practical than another and the
+results might differ across use cases for the same groups of models.
+Thus, it is insufficient to only report the task being targeted in a
+paper, and it is necessary to explain targeted use cases for the
+models.  Once the task and use cases are specified, an appropriate
+\emethodology (or \methodologies) should be chosen.  This would also
+help any future experiment to set up a fair comparison of models.
+
+Prior work on code summarization has targeted only the batch-mode.
+Namely, models were evaluated for a use case that reflects applying a
+model to a repository at a specific point in time.
+Arguably, however, the batch-mode might not be considered as the most practical
+use case.  \Fix{Why is batch-mode bad then?}
+In contrast, the continuous-mode may reflect more realistic usages: 
+in the continuous-mode, a developer trains a model at some point in
+time and then uses the model at some later point.
+Figure~\ref{fig:method-evoaware} illustrates this use case.  
+Prior work has not evaluated models in the continuous-mode, and does not take into account
+%Prior work ignored 
+the notion of time when creating \train, \val, and \test
+sets~\cite{TanETAL15Online}.  Therefore, the examples that end up in a
+\train set might be code snippets that were included in a repository
+in 2020 and the examples that end up in a \test set might be code
+snippets from 2015.
+\Fix{Ok so what will happen?}
+%Although the results (i.e., automatic metrics) might end up
+%being similar in various use cases, 
+
+In this paper, we study recent literature on \comgen and \methnam
+tasks.  By reasoning about their \emethodologies, we define two use
+cases that are appropriate to be evaluated by those \methodologies.
+Somewhat surprisingly, we discovered that no prior work, in the
+aforementioned areas, takes into account time when code was committed
+into repositories. \Fix{this sentence is redundant to above, so it is not surprising anymore.}
+
+Next, we define a novel use case, dubbed \cmode, when a developer uses
+a fixed models continuously over some period of time.
+\Fix{but you already have talked about the continuous mode above, why introduce it again? Also, not sure if you want to mark a \emph{use case} ``novel''; maybe ``practical yet was never evaluated for?''}
+%
+We describe an appropriate \emethodology for this use case.
+%
+We by no means claim that this is the only practical use case, but
+definitely the one that we (wrongly) assumed has been evaluated in the
+literature.
+%
+Other uses cases are possible and feasible, and we do not attempt to
+make an exhaustive list.
+
+Finally, we evaluate several previously proposed models (targeting two
+code summarization tasks) using three \emethodologies.  Our goals were to
+(1)~understand the impact of the \emethodology on automatic metrics,
+which are commonly used to judge the performance of models, and
+(2)~check if we might end up with conflicting conclusions depending on
+the used \methodology.
+
+Our results show that absolute values for automated metrics vary
+widely across the three \methodologies, which indicates that models
+might be appropriate only for some uses cases.  \Fix{More importantly,
+  we find that depending on the used \methodology, we might end up
+  concluding that one or another is better for the task}.  Thus, it is
+imperative that future work describe what use case is being targeted
+and use appropriate \methodology.  In an ideal scenario, each model
+would be evaluated for all known use cases, but that might not be
+feasible due to high computational costs associated with training 
+large-scale ML models.
+
+% (i.e., model M1 is better than M2 if one methodology is used, and M2
+%model is better than M1 is used)
+
+%We then evaluate several recently proposed models using three
+%methodologies.
+
+%We look back at recent papers on comment generation and method name
+%generation.
+
+%% Arguably, prior work on code summarization tasks did not consider one
+%% of the most practical uses case: continuous-mode.  In this mode, a
+%% developer would train a model at a point $$
+
+%% \noindent
+%% \textbf{Example} Consider Alice, a developer at a large software
+%% company.  Alice decided to use an existing model for comment
+%% generation for her work and integrate the model into her IDE.  She
+%% trains the model of the data available in open-source projects.  Once
+%% she runs the model, she observes that her
+
+\emph{In summary, this paper argues that we need to do a better job
+  when choosing an \emethodology and reporting results of ML models for
+  code summarization tasks.}  Regardless if the conclusions of prior
+work hold or not across \methodologies, we should always choose the
+one appropriate the targeted task and use case.  We hope that the
+community will join us in the effort to define the most practical use
+cases and further evaluate \methodologies for each use case.
+
+Our source code for running all the experiments, as well as the
+implementation of all used models and resulting datasets are available
+on GitHub~\cite{URLOncePaperIsAccepted}.
+
+%One important question we want to ask is: How to properly evaluate
+%NLP/ML techniques that target software?
+
+%% Prior work looks only at a single point in time and using all data
+%% available at that single point. The better way we claim is that we
+%% need to take much closer look at how software, used in the
+%% evaluations, evolves and what is available at each point. For example,
+%% in comment generation, it is more reasonable to generate comments
+%% using the model trained on the data previously in the project than
+%% using the one trained on other irrelevant projects because it mimic
+%% how developers maintain the project and better help developers to
+%% write comments.

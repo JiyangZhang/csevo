@@ -1,0 +1,73 @@
+# "https://github.com/GeyserMC/Geyser.git"
+
+It has some public methods?
+
+rev 8a19e353423c3df3237343a9beffddf6d52c815c
+
+./connector/src/main/java/org/geysermc/connector/entity/Entity.java:210
+```
+    /**
+     * x = Pitch, y = HeadYaw, z = Yaw
+     */
+    public Vector3f getBedrockRotation() {
+        return Vector3f.from(rotation.getY(), rotation.getZ(), rotation.getX());
+    }
+```
+
+./connector/src/main/java/org/geysermc/connector/world/chunk/bitarray/Pow2BitArray.java:39
+```
+    /**
+     * Sets the entry at the given location to the given value
+     */
+    public void set(int index, int value) {
+        Preconditions.checkElementIndex(index, this.size);
+        Preconditions.checkArgument(value >= 0 && value <= this.version.maxEntryValue, "Invalid value %s", value);
+        int bitIndex = index * this.version.bits;
+        int arrayIndex = bitIndex >> 5;
+        int offset = bitIndex & 31;
+        this.words[arrayIndex] = this.words[arrayIndex] & ~(this.version.maxEntryValue << offset) | (value & this.version.maxEntryValue) << offset;
+    }
+```
+
+
+# Running collect_data on these 10 repos
+
+[1]Revision on 2020_Jan_1
+[1]In revision d86778f4ffce248fbf3cf72e6c77ea6a45fa23d9, got 4125 files to parse
+[1]Parsed 2062 files. Reused 2063 files. Parsing error for 0 files. Ignored 33822 methods. Total collected 46536 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision cceef00138a43a89f5009af62c73ec0bc1681d00, got 2150 files to parse
+[1]Parsed 1428 files. Reused 722 files. Parsing error for 3 files. Ignored 8066 methods. Total collected 7595 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision e508772040678727f3095e076081781f7b68712f, got 149 files to parse
+[1]Parsed 54 files. Reused 95 files. Parsing error for 0 files. Ignored 421 methods. Total collected 281 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 3bb0fa04f607c228bbdc38db6779d3b1915452dc, got 425 files to parse
+[1]Parsed 0 files. Reused 425 files. Parsing error for 0 files. Ignored 0 methods. Total collected 20 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 8a19e353423c3df3237343a9beffddf6d52c815c, got 201 files to parse
+[1]Parsed 201 files. Reused 0 files. Parsing error for 0 files. Ignored 553 methods. Total collected 68 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 43e31743dccbde8e61f4735a723fc975af1c687e, got 45 files to parse
+[1]Parsed 3 files. Reused 42 files. Parsing error for 0 files. Ignored 44 methods. Total collected 92 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 0af93709d3ede6ed71823a6120ef1c7378c9343d, got 1016 files to parse
+[1]Parsed 59 files. Reused 957 files. Parsing error for 0 files. Ignored 174 methods. Total collected 491 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 56eef2b563fbe549183a8aa62c9d8fe05d79cb7b, got 23947 files to parse
+[1]Parsed 6404 files. Reused 17543 files. Parsing error for 0 files. Ignored 25667 methods. Total collected 2999 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 38e5dc64e76db14cf2c11728e24d851b441de150, got 939 files to parse
+[1]Parsed 20 files. Reused 919 files. Parsing error for 0 files. Ignored 192 methods. Total collected 2234 methods.
+
+[1]Revision on 2020_Jan_1
+[1]In revision 50728bc07b84c44863438128cf72b434c00bb1c9, got 9 files to parse
+[1]Parsed 0 files. Reused 9 files. Parsing error for 0 files. Ignored 0 methods. Total collected 2 methods.

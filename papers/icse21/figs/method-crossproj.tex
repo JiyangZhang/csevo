@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+  line width=0.4pt,
+  node distance=0ex and 0em,
+  every node/.style={scale=0.9},
+  gridBox/.style={rectangle, opacity=0, draw=red},
+  box/.style={rectangle, draw=black, inner sep=2pt, font=\small},
+  rounded box/.style={rectangle, rounded corners, draw=black, inner sep=2pt, font=\small},
+  anno/.style={font=\footnotesize},
+]
+
+  % legends
+  \node (b-l-train) at (0, -2ex) [sExample, dsTrain] {};
+  \node (b-l-train-text) [right = .1em of b-l-train] [anno] {\Train};
+  \node (b-l-val) [right = .2em of b-l-train-text] [sExample, dsVal] {};
+  \node (b-l-val-text) [right = .1em of b-l-val] [anno] {\Val};
+  \node (b-l-test) [right = .2em of b-l-val-text] [sExample, dsTest] {};
+  \node (b-l-test-text) [right = .1em of b-l-test] [anno] {\Test};
+
+  \node (b-p1) at (0,0) [anchor=south, sProject] {};
+  \node (b-p2) [right = \wSepProject of b-p1.east] [sProject] {};
+  \node (b-p3) [right = \wSepProject of b-p2.east] [sProject] {};
+  \node (b-p4) [right = \wSepProject of b-p3.east] [sProject] {};
+  \node (b-p5) [right = \wSepProject of b-p4.east] [sProject] {};
+
+  \foreach \pi/\ds in {1/dsTrain,2/dsTrain,3/dsTrain,4/dsVal,5/dsTest} {
+    \foreach \ex/\ey [count=\ei] in {
+      -.8em/-1em, 0em/-1em, .8em/-1em,
+      -1.2em/0, -.4em/0, .4em/0, 1.2em/0,
+      -.8em/1em, 0em/1em, .8em/1em
+    } {
+      \node (b-p\pi-\ei) [below right = \ey and \ex of b-p\pi.center, anchor=center] [sExample, \ds] {};
+    }
+  };
+
+\end{tikzpicture}

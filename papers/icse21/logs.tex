@@ -1,0 +1,169 @@
+\section{Discussion Logs}
+
+We document some important discussions here.
+
+\subsection{20200521}
+
+\begin{itemize}
+\item We noticed that training on evolution set didn't improve a lot
+  than training on latest set, though evolution set is $3 \sim 4
+  \times$ bigger than latest set.  We were curious maybe increasing
+  the set size doesn't help improving performance after some certain
+  point.  We could do an experiment to test that.
+\item For the purpose in the previous item, also to get better
+  estimation on the final testing set performance, we think maybe in
+  the small version of data set, testing set shouldn't be
+  down-sampled.
+\item For the next model to integrate, we agreed to prioritize recent
+  architecture: GNN and transformer.
+\end{itemize}
+
+
+\subsection{20200525}
+
+\begin{itemize}
+\item We looked into several NLP papers (new model / comparison of
+  models / critical evaluations) in order to not repeating some wrong
+  paths and see what's the path that we want to take.  Below are a
+  bunch of things that we can consider doing...
+\item Do a critical evaluation over comment generation models.
+\item Introduce a model that beats all other models simply by using
+  more data - which will likely be a deep transformer model, which may
+  be very soon be out-dated after other deeper model / larger data set
+  comes out.
+\item Study how to use data from project history.
+\item Study how to use data from different quality projects.
+\end{itemize}
+
+
+\subsection{20200718}
+
+Email threads:
+
+\textbf{On June 19, Milos said:}
+
+I still believe that the work we started on evaluating comment
+generation is an excellent topic, and that work can be published at a
+top conference.  However, there is one bigger question that I think we
+should ask first:
+
+How to properly evaluate NLP/ML techniques that target software
+
+Prior work (including our original plan to include evolution data) looks
+only at a single point in time and using all data available at that
+point.  That seems conceptually broken.  I think (as I discussed with
+Pengyu) that we need to take much closer look at how software (used in
+the evaluations) evolves and what is available at each point.
+
+Let me give an example.  Say that we want to generate comments at time
+$t_n$.  (All published papers take into account code available in $t_n$,
+split things based on files or projects and evaluate their approach.)
+Here is what we should do:
+
+Split each project history based in several time frames (frames for
+short).  We want to use same frames for each project.  Let's say we have
+the following frames:
+
+f1 (2016), f2 (2017), f3 (2018), f4 (2019), f5 (2020)
+
+Note that we do not need to define frame=year (this can be also month or
+maybe even week or a day in the limit).
+
+Then we would train models on data available at the end of f1 and use
+that model to predict things in f2.  We would then train on f2 and use
+that model to predict f3, etc.
+
+My impression is currently that we should only use previous frame for
+training (and not *all* previous frames); two reasons: (1) we do not
+want training sets to overlap (although I am not sure about this one),
+and (2) more recent data is likely to give better prediction (although
+we have seen that more data even if noise can help).
+
+We can apply this approach, we can call it time-aware (or time-shifted
+or time-travel) to any NLP/ML approach that was studied in the past.
+(Maybe those papers that do comment generation do take comments in
+order; hopefully?  Can you please check.)  This includes work on comment
+generation, comment update, code completion.  I feel that going with
+code completion and comment generation can be simplest for now.
+
+In short, I proposed that we focus on time-aware evolution of NLP/ML
+models for SE for ICSE.
+
+We can still keep that in the repo that you have (because it is related
+to evolution) or we can make a new one.
+
+This is doable for ICSE and can be very exciting topic.
+
+Let me know if you have any questions.  If not, then we should start :)
+
+We can start with the following:
+use frame of 1 year
+do comment generation (as you have some models running)
+
+We can all other things as we go.
+
+
+\textbf{On June 28, Milos said:}
+
+I think Pengyu knows of this paper, which is the most relevant for our
+planned work for ICSE:
+
+\url{https://dl.acm.org/doi/10.1145/3236024.3236054} \cite{TuETAL18Careful}
+
+
+\textbf{On July 4, Milos said:}
+
+Inspired by some recent discussions with Pengyu, let me expand on our
+plan for ICSE 2021.
+
+We were originally thinking to evaluate on each commit.  That is still
+great and we should do it!  ICSE is the best target.
+
+Additionally, we can use PRs (both those that are accepted and rejected)
+in our evaluation.  We can apply our approach to each PR and evaluate
+the outcome (and even see if that correlates with PR being
+rejected/accepted).  Definitely more things to think through, but
+something to keep on the list.  We keep things up-to-date in that
+evolution repo, right?
+
+
+\subsection{20200725}
+
+\textbf{Discussion: the finding of the ICSE'15
+  paper~\cite{TanETAL15Online}}:
+
+We don't think our work is less important because of this paper.
+Several novel aspects:
+
+\begin{itemize}
+\item We are doing generative tasks, while existing work including
+  Tan et al.~\cite{TanETAL15Online} is doing classification tasks (defect
+  prediction).
+\item Showing the results of recent popular techniques will be
+  valuable.  For example, DeepCom, n-gram code completion
+  (Naturalness), and one more would be good.
+\item In Tan et al.~\cite{TanETAL15Online}, they go into another limit and claim
+  that this time based approach is what is correct.  We would say both
+  can be correct \textit{depending on the task}.  For example, a
+  company may want to build a model now and apply to code from 2012 to
+  find something or learn something about that code.  In other words,
+  using future might not always be unfair and that has to be clearly
+  stated in our paper.
+\item Rather than having one performance score for a model on the
+  dataset obtained in new version (usually removing duplicate data),
+  it will also be useful to know the performance on some other
+  subsets.  For example: (1) regression data (i.e., data existed in
+  previous version); (2) new data, which can be split to \{cloned,
+  trivial, novel\} new data; (3) the new data in the files/projects
+  existed in previous version; (4) the new data not in the
+  files/projects existed in previous version.
+\end{itemize}
+
+\textbf{Is cross-entropy computed in Naturalness paper is impacted?}
+
+Pengyu: Naturalness paper primarily studied two things and one of them
+is affected.  (1) They use cross-entropy as an indication of the
+``naturalness'' of software at a specific revision - that is fine.
+(2) They use n-gram language model built on a part of software to
+apply on the rest - that is not fine and impacted by potential data
+leakage.

@@ -1,0 +1,276 @@
+\section{Related Work}
+\label{sec:related}
+
+Tu et al.~\cite{TuETAL18Careful} revealed the data leakage problem
+when using issue tracking data in the literature, caused by the
+unawareness of the evolution of issue attributes.  We revealed that
+similar problem also exists in the naturalness of software when using
+code base data caused by the unawareness of the evolution of code, and
+we propose practical and generalizable solutions to evaluate ML
+techniques in evolution-aware settings to mitigate the threats of data
+leakage.
+
+\cite{BiswasAndRajan20Machine}
+
+\subsection{Code Summarization}
+
+%% \input{tables/table-models}
+Most of the neural comment generation work
+frame the task as a encoder-decoder structure
+and generate comments from source code. The mainstream
+approaches can be categorized into textual-based approach,
+structure-based approach and hybrid approach.
+
+The textual-based approaches only consider the sequential
+information in the code sequence.
+Iyer et al.\cite{IyerETAL16Summarizing} use Long Short Term Memory
+(LSTM) network with attention to produce summaries with given SQL
+sequence. Allamanis et al.~\cite{AllamanisETAL16Convolutional} propose
+to use convolutional attention network to summarize the input source
+code. Ahmad et al.~\cite{AhmadETAL20Transformer-based} propose to use transformer equipped with relative positions representation and copy attention to generate comments.
+
+The structure-based approaches mostly takes the structure of source code
+into consideration.
+Hu et al.~\cite{HuETAL18Deep} develop a novel traversal
+method ``Structure-Based Traversal'' to first flatten the Abstract
+Syntax Tree (AST) into sequence as the input of encoder.
+Liang et al.~\cite{LiangAndZhu18Automatic} use Recursive Neural
+Network to directly encode the AST of code snippets. Alon et
+al.~\cite{AlonETAL19code2seq} extract AST paths
+(path between two terminals in AST) from code and uniformly sample to
+get the inputs of LSTM encoder. Fernandes et
+al.~\cite{FernandesETAL19Structured} first represent code with graph
+following the way proposed by Allamanis et
+al.~\cite{AllamanisETAL18Learning}
+and use both Gated Graph Neural Network (GGNN) and biLSTM to learn the graph representation.
+
+The hybrid approaches usually use more than one modality to help
+generate comments. Hu et al.~\cite{HuETAL19Deep} propose a model to
+encode SBT sequence and code sequence separately with separate
+attention which shows improvement over the AST based
+approach~\cite{HuETAL18Summarizing}. LeClair et
+al.~\cite{LeClairETAL20Improved} use a Graph Neural Network to learn
+the AST representation rather than directly using flattened AST
+sequence.
+
+In addition to AST, other auxiliary information is used to help
+comment generation. Hu et al.~\cite{HuETAL18Summarizing} extract and
+encode API usage sequence from the source code to see further
+improvement. Cai et al.~\cite{CaiETAL20TAG} incorporate the type of
+AST node. They first build a Token-type-tree which is a
+N-ary tree where each node is consisted of token from code sequence and the type of the corresponding AST node
+from source code. Then they use tree-LSTM  encoder and decoder to
+generate comments with the help of type information.
+
+% (ICPC'18); Hu et al.~\cite{HuETAL19Deep}
+% Based on \sts models, where encoder can take tree inputs by
+%flattening them into sequences.  They essentially like this: ``(
+%parent children ) parent''.  Handle OOV by backing-up to the AST
+%type. Dataset is available.
+
+
+%Iyer et al.~\cite{IyerETAL16Summarizing} use 
+%(ACL'16). CODE-NN, used
+%Long Short Term Memory (LSTM) networks with attention to produce summaries
+%of \Csharp and SQL based on the code snippet.
+%Dataset is from Stack Overflow.
+
+%Loyola et al.~\cite{LoyolaETAL17Neural} (ACL'17). Used seq2seq model
+%trained on code changes to generate commit messages.  Dataset is 12
+%real-world repositories. Language: python, javascript, c++, java.
+
+
+%Liang and Zhu~\cite{LiangAndZhu18Automatic}% (AAAI'18)
+%take advantage of the structure information of programming language
+%and use Recursive NN (tree-lstm) to encode
+%the AST of code snippets.
+%They added 'CombineName' node which indicates sub-tokenizing
+%the identifiers. Then used the learned representation of ast as the input of GRU decoder.
+%They studied Java, and used ten open-source Java code repos from Github. 
+%Used ten open-source Java code repositories from
+%GitHub for this experiment. In each of these
+%repositories they extracted descriptive comment and the corresponding method pairs.
+%Constructor methods are excluded from this exercise. These pairs are then used for
+%training and test. \textbf{Notice that all the method names and
+%parameters are excluded from training and test.}
+%\textbf{Code}: [Tensorflow] \url{https://github.com/liang2024086/code_comment_generation}
+
+%Reinforcement learning is also applied to this area, Wan et
+%al.~\cite{WanETAL18Improving} %(ASE'18).
+%incorporate AST as well as sequential content of code snippets into a deep reinforcement learning framework
+%(i.e., actor-critic network). The actor network provides the confidence
+%of predicting the next word according to current state. The critic network
+%evaluates the reward value of all possible extensions of the current state and
+%can provide global guidance for explorations.
+%They employ an advantage reward composed of BLEU metric to train both networks.
+
+%Studied python, used datasets from~\cite{BaroneAndSennrich17Parallel}
+%The experiments are done with Python.
+%To construct the tree-structure of code, they parse Python code into
+%abstract syntax trees via ast2 lib. To convert code into sequential
+%text, they tokenize the code by some special tokens.  They also tokenize the comment by {(space)}.
+%``{. , ” ’ : ; ) ( ! (space)}. 
+%\textbf{Code}: [Pytorch] \url{https://github.com/wanyao1992/code_Summarization_public}
+
+%% Hu et al.~\cite{HuETAL18Deep}% (ICPC'18); Hu et al.~\cite{HuETAL19Deep}
+%% (ESE'19).  Based on \sts models, where encoder can take tree inputs by
+%% flattening them into sequences.  They developed a novel flattening
+%% method ``Structure-Based Traversal'', essentially like this: ``(
+%% parent children ) parent''.  Handle OOV by backing-up to the AST
+%% type. Dataset is available.
+%To decrease noise introduced to the
+%learning process, they only take the first sentence of the comments%
+%since they typically describe the functionalities of Java methods
+%according to Javadoc guidance2 . However, not every comment is useful.
+%Methods with empty or just one-word descriptions are filtered out in
+%this work. The setter, getter, constructor, test methods, and override
+%methods, whose comments are easy to predict, are also excluded.
+%\textbf{Code}: [Tensorflow]
+%\url{https://github.com/xing-hu/EMSE-DeepCom}
+
+%% The BLEU scores reported in Hu et al.~\cite{HuETAL18Deep} could not be
+%% replicated as pointed out by Alon et al.~\cite{AlonETAL19code2seq}.
+%% This might be due to a different nltk library version they used, as we
+%% observed the BLEU score computation in nltk library has been
+%% dramatically changed in the history (e.g., version 3.2).
+
+
+
+%% Hu et al.~\cite{HuETAL18Summarizing} (IJCAI'18). Use a code encoder and API encoder (pre-trained on
+%% API summarization task) as inputs of decoder. (API sequence can be obtained from source code,
+%% but the code used to extract not provided) 
+%% Dataset is available.
+%\textbf{Code}: [Tensorflow] \url{https://github.com/xing-hu/TL-CodeSum}
+%Methods with empty or just one-word descriptions are filtered
+%out in this work. The setter, getter, constructor, test methods,
+%and override methods, whose comments are easy to predict,
+%are also excluded.
+
+%% LeClair et al.~\cite{LeClairETAL19Neural} (ICSE'19).  In addition to
+%% the ``standard'' experiment of summarization from source code, they
+%% also study the ``challenge'' experiment of summarization from bytecode
+%% (using only AST of methods to generate comments). They create a multi-input model
+%% that used the SBT sequence with all identifiers removed as the first
+%% input, and the source code tokens as the second. They found that if
+%% you decouple the structure of the code form the code itself that the
+%% model improved its ability to learn that structure.
+%% Dataset from
+%% Sourcerer repository provided by Lopes et al. The repository contains
+%% over 51 million Java methods from over 50000 projects.
+%% They take out first sentence of Javadoc, filter out comments not in English,
+%% using langdetect (\url{https://pypi.org/project/langdetect/}) remove
+%% methods over 100 words long and comments >13 and <3 words they remove
+%% any methods from files that include phrases such as ``generated by''.
+%% This filter is quite aggressive, as it reduced the dataset size
+%% to around 2m methods, and on manual inspection they found no cases of
+%% autogenerated code. In fact, a majority of the filtered methods theyre
+%% exact duplicates (around 100k unique examples out of \~2m removed
+%% methods). But because comments to auto-generated code are often still
+%% meaningful, they added one copy of each of the 100k unique examples back
+%% into the dataset, and ensured that they theyre in the training set only
+%% (so they did not attempt to test against auto-generated comments). The
+%% result is a dataset of around 2.1m methods.  To obtain the ASTs, they
+%% first used srcml (\url{https://ieeexplore.ieee.org/document/6065176})
+%% to extract an XML representation of each method. Then they built a tool
+%% to convert the XML representation into the flattened SBT
+%% representation. they created our own modification of SBT in which all
+%% the code structure remained intact, but in which they replaced all words
+%% (except official Java API class names) in the code to a special
+%% <OTHER> token. They call this SBT-AO for SBT AST only. They use this
+%% modification to simulate the case when only an AST can be extracted.
+%% \textbf{Code}: [Keres]
+%% \url{https://s3.us-east-2.amazonaws.com/icse2018/index.html}
+
+%% %LeClair and McMillan~\cite{LeClairAndMcMillan19Recommendations} (NAACL'19).
+%% %This paper recommends people to use their dataset to do code summarization.
+%% %The dataset includes 2.1m pairs of
+%% %Java methods and \javadoc pairs over 28k Java projects.  Dataset based
+%% %on their previous work~\cite{LeClairETAL19Neural}, rooted
+%% %from~\cite{LopesETAL10UCI}.  Analyzed splitting by method
+%% %v.s. splitting by project, and removing auto generated Java methods.
+%% %Dataset can be downloaded: \url{http://leclair.tech/data/funcom/}
+
+%% Alon et al.~\cite{AlonETAL19code2seq} (ICLR'19). They combine the uniformly sampled k
+%% AST paths (path between two terminals in AST) and terminals' tokens as
+%% inputs of decoder, then generate comments. Studied Java, use their own
+%% datasets.  Java-large: new dataset of the 9500 top-starred Java
+%% projects from GitHub that were created since January 2007. They randomly
+%% select 9000 projects for training, 250 for validation and 300 for
+%% testing. This dataset contains about 16M examples and it is publicly available.  \textbf{Code}: [Tensorflow]
+%% \url{https://github.com/tech-srl/code2seq} [Pytorch]
+%% \url{https://github.com/m3yrin/code2seq}
+
+%% Fernandes et al.~\cite{FernandesETAL19Structured} (ICLR'19).  Experimented with GGNN
+%% encoder and sequence+GGNN encoder.  Studied both \Csharp and Java,
+%% used many datasets from various sources. Represent code with graph~\cite{AllamanisETAL18Learning}.
+%% Dataset
+%% from~\cite{AlonETAL19code2seq}. \textbf{Code}: [Tensorflow]
+%% \url{https://github.com/CoderPat/structured-neural-summarization}
+
+%% LeClair et al.~\cite{LeClairETAL20Improved} (ICPC'20).  Models based
+%% on their previous work~\cite{LeClairETAL19Neural}.  Use a ConvGNN
+%% rather than flattened AST in the multi-input \sts model.  Dataset
+%% taken from their previous
+%% work~\cite{LeClairAndMcMillan19Recommendations}.  Use the
+%% SrcML(\url{https://www.srcml.org/}) library to generate the associated
+%% ASTs from the raw source code.  \textbf{Code}: [Tensorflow+Keras]
+%% \url{https://github.com/acleclair/ICPC2020_GNN}
+
+%% Ahmad et al.~\cite{AhmadETAL20Transformer-based} (ACL'20).  They use a
+%% transformer equipped with relative encoding of code tokens' positions
+%% and copy mechanism.  They use a Java dataset (from Hu et
+%% al.~\cite{HuETAL18Summarizing}) and Python dataset (from Barone and
+%% Sennrich~\cite{BaroneAndSennrich17Parallel}).  \textbf{Code}:
+%% [Pytorch] \url{https://github.com/wasiahmad/NeuralCodeSum}
+
+%% Cai et al.~\cite{CaiETAL20TAG} (ACL'20).  \Fix{TODO}.
+
+%% Zhao et al.~\cite{ZhaoETAL20Survey} is a survey of some (very old)
+%% comment generation models.
+
+\subsection{Evolution Data}
+Tan et al.~\cite{TanETAL15Online} point out that using
+cross-validation to train defect prediction classifier (predict
+whether a change is buggy at the time of the commit) will use future
+data which does not match a real-world usage scenario. Therefore they
+propose time sensitive change classification which uses information,
+known at time $t$ only, to classify change $c$ that is committed at $t$.
+For example, time sensitive change classification predicts at time
+$t_{predict}$ for the change $C_6$, i.e., the test set.  The changes
+committed before $C_6$ are the training set, i.e., $C_1$-$C_5$, which
+is used to build models.
+
+Lutellier et al.~\cite{LutellierETAL20CoCoNut} propose a new technique
+CoCoNuT, which uses ensemble learning on the combination of
+convolutional neural networks (CNNs) and a new context-aware neural
+machine translation (NMT) architecture to automatically fix bugs in
+multiple programming languages. They claim they are the first to
+acknowledge and address using-future-data threat in the context of
+program repair techniques (APR).
+They split benchmark into two parts The first part contains bugs from
+2006 to 2010 and is used to evaluate CoCoNuT trained with data from
+before 2006. The second part of the benchmark contains bugs from 2011
+to 2016 and is used to evaluate CoCoNuT trained with data from before
+2011 (including data from before 2006). This split allows CoCoNuT to
+learn from instances up to 2010 to fix newer bugs while keeping the
+overhead reasonable. They then combine the results of CoCoNuT on these
+two sub-benchmarks to obtain the final number of bugs fixed. With this
+correct setting, CoCoNuT has no access to data that would be
+unavailable in a realistic scenario.
+
+Pradel et al.~\cite{PradelETAL20Scaffle} present a bug localization
+technique which is based on the key insight to divide the problem into
+two easier sub-problems. First, a trained machine learning model
+encodes the raw crash trace and predicts which lines of a raw crash
+trace are most informative for localizing the bug. Then, these lines
+are fed to an information retrieval-based search engine to retrieve
+file paths in the code base, predicting which file to change to
+address the crash.  To evaluate the system in a realistic setup, they
+simulate using the approach at different points in time. At each point
+in time $t$, they simulate by training its model based on all data
+available at $t$ and by predicting the bug locations for all crash
+traces that occur between $t$ and $t$ + 50 days.  For the prediction,
+they gather the set of all files in the code base at $t$ + 50 days and
+let the path prediction component predict which of these files need to
+be fixed. This setup is realistic, as it uses only past data to
+predict future bug locations

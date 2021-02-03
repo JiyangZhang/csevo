@@ -1,0 +1,24 @@
+# Temp files
+
+*~
+\#*\#
+.DS_Store
+.idea
+
+# Special branches
+
+/csevo-data/
+/csevo-results/
+
+# Temp directories
+
+/_downloads/
+/_results/
+
+# DB
+
+/csevo-db/
+/csevo-db-dump/
+/db.log
+/_raw_data
+/_models

@@ -1,0 +1,84 @@
+\begin{tikzpicture}[
+  line width=0.4pt,
+  node distance=0ex and 0em,
+  every node/.style={scale=0.9},
+  gridBox/.style={rectangle, opacity=0, draw=red},
+  box/.style={rectangle, draw=black, inner sep=2pt, font=\small},
+  rounded box/.style={rectangle, rounded corners, draw=black, fill=gray!20, inner sep=3pt, font=\small},
+  anno/.style={font=\footnotesize},
+]
+
+  % legends
+
+  \draw[dsTrain] (-4em,-2ex) rectangle (-3em,-3ex);
+  \node (b-l-train) at (-4.2em,-2.5ex) [anchor=east, anno] {\Train};
+  \draw[dsVal] (-4em,-4ex) rectangle (-3em,-5ex);
+  \node (b-l-val) at (-4.2em,-4.5ex) [anchor=east, anno] {\Val};
+  \draw[dsTest] (-4em,-6ex) rectangle (-3em,-7ex);
+  \node (b-l-test) at (-4.2em,-6.5ex) [anchor=east, anno] {\Test};
+  
+
+  \foreach \s/\xbase in {mixedproj/0,crossproj/14em,evoaware/28em} {
+    
+    \node[coordinate] (\s-p1) at (\xbase,0) [] {};
+    \node[coordinate] (\s-p2) [right = 6em of \s-p1] [] {};
+    \node[coordinate] (\s-p3) [right = 8em of \s-p1] [] {};
+    \node[coordinate] (\s-p4) [right = 10em of \s-p1] [] {};
+
+    \node[coordinate] (\s-t1) at (\xbase,0) [] {};
+    \node[coordinate] (\s-t2) [below = 6ex of \s-t1] [] {};
+    \node[coordinate] (\s-t3) [below = 12ex of \s-t1] [] {};
+    \node[coordinate] (\s-t4) [below = 18ex of \s-t1] [] {};
+
+    \foreach \x/\y in {1/2,2/3,3/4} {
+      \node[coordinate] (\s-t\x-1) at ($(\s-t\x)!0.5!(\s-t\y)$) [] {};
+      \node[coordinate] (\s-t\x-2) at ($(\s-t\x)!0.75!(\s-t\y)$) [] {};
+    };
+
+    \foreach \x/\t in {1/2017,2/2018,3/2019,4/2020} {
+      \node (\s-b-t\x) [left = .2em of \s-t\x] [anno] {\t};
+    };
+
+    \draw[line width=1pt] (\s-p4) rectangle (\s-t4);
+
+    \foreach \x in {2,3} {
+      \draw (\s-t1 -| \s-p\x) -- (\s-t4 -| \s-p\x);
+    };
+
+    \foreach \x in {2,3} {
+      \draw (\s-t\x -| \s-p1) -- (\s-t\x -| \s-p4);
+    };
+
+    \foreach \x in {1-1,1-2,2-1,2-2,3-1,3-2} {
+      \draw[dashed] (\s-t\x -| \s-p1) -- (\s-t\x -| \s-p4);
+    }
+
+    \node[coordinate] (\s-p1-base) at ($(\s-p1|-\s-t4)!0.5!(\s-p2|-\s-t4)$) [] {};
+    \node[coordinate] (\s-p2-base) at ($(\s-p2|-\s-t4)!0.5!(\s-p3|-\s-t4)$) [] {};
+    \node[coordinate] (\s-p3-base) at ($(\s-p3|-\s-t4)!0.5!(\s-p4|-\s-t4)$) [] {};
+    \foreach \x/\ds in {1/train,2/val,3/test} {
+      \node (\s-b-p\x) [below = .5ex of \s-p\x-base] [anno] {$\mathcal{P}_{\ds}$};
+    };
+
+    \node[coordinate] (\s-south) at ($(\s-p1|-\s-t4)!0.5!(\s-p4|-\s-t4)$) [] {};
+  };
+
+  \node (mixedproj-b-text) [below = 4ex of mixedproj-south] [rounded box] {\Mixedproj};
+  \node (crossproj-b-text) [below = 4ex of crossproj-south] [rounded box] {\Crossproj};
+  \node (evoaware-b-text) [below = 4ex of evoaware-south] [rounded box] {\Evoaware};
+
+  \foreach \x in {1,2,3} {
+    \draw[dsTrain, draw=none] (mixedproj-p1|-mixedproj-t\x) rectangle (mixedproj-p4|-mixedproj-t\x-1);
+    \draw[dsVal, draw=none] (mixedproj-p1|-mixedproj-t\x-1) rectangle (mixedproj-p4|-mixedproj-t\x-2);
+  }
+  \draw[dsTest, draw=none] (mixedproj-p4|-mixedproj-t3-2) rectangle (mixedproj-p3|-mixedproj-t4);
+
+  \draw[dsTrain, draw=none] (crossproj-p2) rectangle (crossproj-p1|-crossproj-t4);
+  \draw[dsVal, draw=none] (crossproj-p3) rectangle (crossproj-p2|-crossproj-t4);
+  \draw[dsTest, draw=none] (crossproj-p4|-crossproj-t3-2) rectangle (crossproj-p3|-crossproj-t4);
+
+  \draw[dsTrain, draw=none] (evoaware-p1|-evoaware-t1) rectangle (evoaware-p4|-evoaware-t2);
+  \draw[dsVal, draw=none] (evoaware-p1|-evoaware-t2) rectangle (evoaware-p4|-evoaware-t3);
+  \draw[dsTest, draw=none] (evoaware-p4|-evoaware-t3-2) rectangle (evoaware-p3|-evoaware-t4);
+
+\end{tikzpicture}

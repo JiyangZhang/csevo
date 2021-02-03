@@ -1,0 +1,22 @@
+# Filtering applied while using JavaParser
+remove_not_english_method: True
+remove_long_method:
+  max_len: 10000
+  
+# Remove special tokens in comment
+remove_html: True
+remove_url: True
+remove_non_acsii: True
+
+# Code and comment length filtering, should be the last step.
+code_truncate: False
+code:
+  max_len: None
+  min_len: None
+
+nl_truncate: False
+nl:
+  max_len: None
+  min_len: None
+
+

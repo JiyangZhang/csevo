@@ -1,0 +1,23 @@
+% Manually written
+
+\begin{table*}[t]
+  \begin{small}
+  \begin{center}
+  \caption{\TCEvalSettings}
+  \begin{tabular}{ l | c c c }
+    \toprule
+    \textbf{\Methodology} & \textbf{\Train} & \textbf{\Val} & \textbf{\Test} \\
+    \midrule
+    
+    \Mixedproj & $\mathcal{D}_{train}(\mathcal{P}, \atime)$ & $\mathcal{D}_{val}(\mathcal{P}, \atime)$ &  \\\cline{1-3}
+    
+    \Crossproj & $\mathcal{D}(\mathcal{P}_{train}, \atime)$ & $\mathcal{D}(\mathcal{P}_{val}, \atime)$ &  \\\cline{1-3}
+
+    \Evoaware & $\mathcal{D}(\mathcal{P}, \atimeppp, \atimepp)$ & $\mathcal{D}(\mathcal{P}, \atimepp, \atimep)$ & \multirow{-3}{*}{$\mathcal{D}_{test}(\mathcal{P}_{test}, \atimep, \atime)$} \\
+
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \end{small}
+  \vspace{\TVEvalSettings}
+\end{table*}

@@ -1,0 +1,110 @@
+\section{Experiment Setup}
+\label{sec:settings}
+
+In this section, we describe our experiment setup for comparing the
+\methodologies.  This setup is generic and could be used for any task.
+%
+In this work we instantiate it for \comgen and \methnam tasks.  
+\Fix{In the intro you said you do two code summarization tasks.}
+The
+goal of the experiment is to train a model following each \methodology
+and evaluate and compare the models on a \emph{test set that is
+  common} to all \methodologies.  We record automatic metrics and
+reason about their differences.  \Fix{no prior work used human eval}
+
+We define notations, by extending Section~\ref{sec:prelim}, to help us
+accurately describe our experiment setup.  Let $\mathcal{P}$ be the
+set of projects we intend to collect data from.  We then perform the
+split $\mathcal{P}_{train}, \mathcal{P}_{val}, \mathcal{P}_{test} =
+\asplit(\mathcal{P}, 80\%, 10\%, 10\%)$.  The ratio of 80\%/10\%/10\%
+is chosen following machine learning common
+practice~\cite{StanfordSplitting}.
+
+Let $\mathcal{D}(\mathcal{P}, \atime) = \sum_{P\in\mathcal{P}}
+\aextract(\atime, P)$ be the data collected from projects in
+$\mathcal{P}$ at time point $t$.  The exact implementation of
+$\mathcal{D}(\cdot, \cdot)$ is task-specific.
+
+Let $\mathcal{D}(\mathcal{P}, \atimep, \atime)$ be the new data from
+projects in $\mathcal{P}$ after time point \atimep{} before time point
+\atime{}.  To compute $\mathcal{D}(Set[Project], Time, Time)$, let
+$F(d_1, d_2)$ be a \filterfunc that returns a subset of $d_2$ after
+removing the data exists in $d_1$.  The exact implementation of
+$F(Set, Set)$ is task-specific.  Then, we have
+$\mathcal{D}(\mathcal{P}, \atimep, \atime) =
+F(\mathcal{D}(\mathcal{P}, \atimep), \mathcal{D}(\mathcal{P},
+\atime))$.
+
+Given $\mathcal{D}(\mathcal{P}, \atime)$ and $\mathcal{D}(\mathcal{P},
+\atimep, \atime)$, we perform the splits:
+\begin{flalign*}
+  &\mathcal{D}_{train}(\mathcal{P}, \atime), \mathcal{D}_{val}(\mathcal{P}, \atime), \mathcal{D}_{test}(\mathcal{P}, \atime) \\
+  &\quad = \asplit(\mathcal{D}(\mathcal{P}, \atime), 80\%, 10\%, 10\%) \\
+%
+  &\mathcal{D}_{train}(\mathcal{P}, \atimep, \atime), \mathcal{D}_{val}(\mathcal{P}, \atimep, \atime), \mathcal{D}_{test}(\mathcal{P}, \atimep, \atime) \\
+  &\quad = \asplit(\mathcal{D}(\mathcal{P}, \atimep, \atime), 80\%, 10\%, 10\%)
+\end{flalign*}
+of the data respectively, and ensures that
+$$
+\forall x \in \{train, val, test\}, \mathcal{D}_x(\mathcal{P}, \atimep, \atime) \subseteq \mathcal{D}_x(\mathcal{P}, \atime)
+$$
+
+\begin{figure*}[t]
+  \centering
+  \input{figs/eval-settings}
+  \caption{Evaluation settings. \JiyangComment{It is a bit confusing
+      to include time for Mixed-project, I suggest removing time in y
+      axis.}\label{fig:eval-settings}}
+\end{figure*}
+
+\InputWithSpace{tables/table-eval-settings}
+
+For each \methodology, we design an evaluation setting that specifies
+the examples used for \train, \val, and \test.
+Figure~\ref{fig:eval-settings} illustrates the \train, \val, and \test
+sets for each \methodology, and Table~\ref{table:eval-settings} lists
+those sets using the notations we just defined.  $\atimeppp, \atimepp,
+\atimep, \atime$ are the chronologically ordered time points at which
+we collect the \dataset{s}; in our experiment, we choose $\atimeppp =
+\ajanone, 2017; \atimepp = \ajanone, 2018; \atimep = \ajanone, 2019;
+\atime = \ajanone, 2020$.
+
+For the \mixedproj \methodology, we use all examples available at
+$\atime$ and split them into \train, \val, and \test sets, and
+examples in different sets are allowed to come from the same project.
+For the \crossproj \methodology, we still use all examples available
+at $\atime$ but ensure that examples of one project can be only in one
+of \train, \val, or \test set.  For the \evoaware \methodology, we use
+the examples between $\atimeppp$ and $\atimepp$ for \train, between
+$\atimepp$ and $\atimep$ for \val, and between $\atimep$ and $\atime$
+for \test. Specially, the \test set is constrained in a way that only
+contains examples that fit all the three \methodologies.
+
+%% The \test sets of the three settings are by natural different, which
+%% makes it hard to compare different evaluation settings using the same
+%% model and the same metric.  To compare the three evaluation settings
+%% in a controlled way, we take the union of their \test sets as the
+%% \textit{\common} \test set (denote as $T_{\common}$).  We will refer
+%% to the \test set that are specific to each evaluation setting as the
+%% \textit{\standard} \test set (denote as $T_{\standard}$).
+%% Table~\ref{table:eval-settings} lists the \train, \val, and \standard
+%% \test sets for each evaluation setting, as well as the \common \test
+%% set.  For simplicity, we use the 4-digits year to represent the time
+%% point at the beginning of that year, e.g., 2020 represents Jan 1, 2020
+%% 00:00.
+
+%% # Use cases
+
+%% ## Evolution
+%% - Train on Data(P_train, 2017, 2018), validation on Data(P_val, 2018, 2019);
+%% - Test on Data_test(P_test, 2019, 2020);
+
+%% ## Cross-project
+%% - Train on Data(P_train, 2020), validation on Data(P_val, 2020);
+%% - Test on Data_test(P_test, 2019, 2020);
+%% - Optionally test on Data(P_test, 2020) and show the results are not statistically significantly different than testing on the previous test set;
+
+%% ## Mixed-project
+%% - Train on Data_train(P, 2020), validation on Data_val(P, 2020);
+%% - Test on Data_test(P_test, 2019, 2020);
+%% - Optionally test on Data_test(P, 2020) and show the results are not statistically significantly different than testing on the previous test set;

@@ -1,0 +1,58 @@
+\section{Data}
+\label{sec:data}
+
+\subsection{Data Collection Process}
+
+\MyPara{List of \repos} Maybe the union of:
+
+\begin{enumerate}
+\item GitHub high quality \repos (1,705 projects).  This list is the
+  union of: top-starred \repos, obtained from search
+  ``q=topic:java+language:java\&sort=stars\&order=desc''; big
+  companies' \repos, obtained from search
+  ``q=language:java+user:USER+stars:>=20'' where ``USER'' $\in$ \{
+  adobe, alibaba, apache, artsy, cfpb, cloudflare, didi, eleme, Esri,
+  facebook, gilt, godaddy, google, guardian, IBM, microsoft, Netflix,
+  OSGeo, SAP, Shopify, square, twitter, Yelp\} (ordered
+  alphabetically, referring
+  to~\url{https://github.com/collections/open-source-organizations}).
+\item Hybrid-DeepCom list:
+  \url{https://github.com/xing-hu/EMSE-DeepCom/blob/master/projects/projects.txt}.
+  This list is missing some big projects.
+\end{enumerate}
+
+From each \repo, we extract all the code-comment pairs from its last
+50,000 revisions.  We call the set of code-comment pairs that appeared
+in the latest commit of the \repo as \lat data, and the entire set of
+code-comment pairs (regardless of which revision(s) they appeared in)
+as \evo data.
+
+\subsection{\DataSets}
+
+Current \dataset entails the data from the first 499 projects of
+GitHub high quality \repos list (we aimed at 500, but out of those,
+openjdk\_jdk has an error during data collection due to its tremendous
+repository size).
+
+We filter out pure abstract methods with no method body (removed
+\UseMacro{ds-removed-abstract-method} data).  Then, for duplicated
+data groups with identical code and comments, we keep only one of them
+in the \dataset and remove the others (removed
+\UseMacro{ds-removed-duplicates} data).
+
+We split the \dataset into \train, \val, and \test sets randomly such
+that the number of \evo data in the three sets are close to
+80\%:10\%:10\%, and with the constraint that one \repo is assigned to
+one and only one of the three sets.
+
+\input{tables/table-dataset-metrics}
+\input{tables/table-dataset-small-metrics}
+
+Table~\ref{table:dataset-metrics} shows the statistics of the
+\dataset: \{number of \repos, number of \evo data, and number of \lat
+data\} in \{entire \dataset, \train set, \val set, \test set\}.
+
+To be able to explore different models more efficiently, we sample
+10\% of the data out of the \dataset as the small version \dataset.
+Table~\ref{table:dataset-small-metrics} shows the statistics of the
+small version \dataset.

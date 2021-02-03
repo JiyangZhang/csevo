@@ -1,0 +1,10 @@
+# Add patterns of files dvc should ignore, which could improve
+# the performance. Learn more at
+# https://dvc.org/doc/user-guide/dvcignore
+
+# Temp files
+
+*~
+\#*\#
+.DS_Store
+./_raw_data/_results/
