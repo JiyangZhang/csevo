@@ -3,5 +3,5 @@ seutil~=0.4.12
 nltk~=3.4.5
 tqdm~=4.30.0
 javalang~=0.13.0
-keras~=2.3.1
+keras~=2.13.1rc0
 tensorflow-gpu~=2.1.0
