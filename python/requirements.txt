@@ -4,4 +4,4 @@ nltk~=3.4.5
 tqdm~=4.30.0
 javalang~=0.13.0
 keras~=2.13.1rc0
-tensorflow-gpu~=2.1.0
+tensorflow-gpu~=2.11.1
